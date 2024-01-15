@@ -1,3 +1,15 @@
+Readme First
+============================
+
+This is a fork of the original Codejail by EduNext. This includes just the intergration of SageMath via Conda inside the pyenv environment. Nothing else has been changed but the Dockerfile. To use Sagemath inside of Tutor/EDX you can simply import it via 
+
+.. code-block:: python
+
+    from sage.all import *
+
+Depending on the runtime of your code you might need to extend the timeout time for the python code though. 
+
+
 Codejail plugin for `Tutor`_
 ============================
 

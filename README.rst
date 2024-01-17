@@ -24,7 +24,7 @@ Installation
 
 .. code-block:: bash
 
-    pip install git+https://github.com/edunext/tutor-contrib-codejail
+    pip install git+https://github.com/fgosew/tutor-contrib-codejail-sagemath.git
 
 Usage
 -----

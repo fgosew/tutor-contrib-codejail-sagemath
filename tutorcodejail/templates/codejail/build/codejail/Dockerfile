@@ -135,17 +135,29 @@ ENV CONDA_VERSION={{ CONDA_VERSION }}
 {% else %}
 ENV CONDA_VERSION=miniconda3-latest
 {% endif %}
+
+# Setup sandbox
 ENV SANDBOX_ENV=/sandbox/venv
+RUN mkdir /sandbox
+RUN groupadd -r sandbox && useradd -m -r -g sandbox sandbox && chown -R sandbox:sandbox /sandbox
 
 # Install system requirements
 RUN apt update && \
     apt install -y sudo
 
-COPY --from=python $PYENV_ROOT $PYENV_ROOT 
+COPY --chown=sandbox:sandbox --from=python $PYENV_ROOT $PYENV_ROOT
 COPY --from=python /root/.bash_profile /root/.bash_profile
 COPY --from=python /root/.bashrc /root/.bashrc
+COPY --from=python /root/.bash_profile /home/sandbox/.bash_profile
+COPY --from=python /root/.bashrc /home/sandbox/.bashrc
 
-RUN . "/root/.bash_profile" && \
+RUN chown sandbox:sandbox /home/sandbox/.bash*
+
+#we do this complicated move due to the performance of chown. Instead of chowning later
+#roughly 5 GB of data we install directly as user 'sandbox'. 
+USER sandbox
+
+RUN . "/home/sandbox/.bash_profile" && \
     pyenv init - && \
     pyenv init --path && \
     pyenv virtualenv-init - && \
@@ -158,7 +170,9 @@ RUN . "/root/.bash_profile" && \
     conda install -y mamba && \
     #directly install conda's sage installation matching the python version of the given sandbox python version
     #to the sandbox folder. 
-    mamba create -y --prefix=${SANDBOX_ENV} sage python=${SANDBOX_PYTHON_VERSION}
+    mamba create -y --prefix=/sandbox/venv/ sage python=${SANDBOX_PYTHON_VERSION}
+
+USER root
 
 # Allows you to add extra pip requirements to your codejail sandbox.
 {% if CODEJAIL_EXTRA_PIP_REQUIREMENTS is defined %}
@@ -169,12 +183,15 @@ RUN . "/root/.bash_profile" && \
 COPY --from=code /openedx/codejailservice /openedx/codejailservice
 COPY --from=codejailservice-python-requirements /openedx/venv /openedx/venv
 
-#remove the conda installation, which at this point is no longer needed, as python and sage work without conda
-#being available. This removes >=8GB of unneeded data. 
-RUN rm -rf ${PYENV_ROOT}/versions/${CONDA_VERSION}
+#clean up the sandbox pyenv and copy the previously generated one from the python stage
+#this also removes the conda installation, which is not needed anymore and would waste 
+#roughly 8 GB of storage if not deleted
+RUN rm -rf ${PYENV_ROOT}/
+COPY --from=python $PYENV_ROOT $PYENV_ROOT
 
-# Setup sandbox
-RUN groupadd -r sandbox && useradd -m -r -g sandbox sandbox && chown -R sandbox:sandbox /sandbox
+#delete files that might fail due to path / values not being available
+RUN rm /home/sandbox/.bashrc
+RUN rm /home/sandbox/.bash_profile
 
 ENV PATH /openedx/venv/bin:${PATH}
 ENV VIRTUAL_ENV /openedx/venv/

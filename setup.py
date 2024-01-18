@@ -34,8 +34,8 @@ setup(
     version=ABOUT["__version__"],
     url="https://github.com/github/tutor-contrib-codejail",
     project_urls={
-        "Code": "https://github.com/edunext/tutor-contrib-codejail",
-        "Issue tracker": "https://github.com/edunext/tutor-contrib-codejail/issues",
+        "Code": "https://github.com/fgosew/tutor-contrib-codejail-sagemath",
+        "Issue tracker": "https://github.com/fgosew/tutor-contrib-codejail-sagemath/issues",
     },
     license="AGPLv3",
     author="eduNEXT",

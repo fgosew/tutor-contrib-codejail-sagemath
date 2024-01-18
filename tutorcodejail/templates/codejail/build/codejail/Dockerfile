@@ -162,7 +162,7 @@ RUN . "/root/.bash_profile" && \
 
 # Allows you to add extra pip requirements to your codejail sandbox.
 {% if CODEJAIL_EXTRA_PIP_REQUIREMENTS is defined %}
-{% for extra_requirements in CODEJAIL_EXTRA_PIP_REQUIREMENTS %}RUN {% if is_buildkit_enabled() %}--mount=type=cache,target=/openedx/.cache/pip,sharing=shared {% endif %} /sandbox/venv/bin/pip install '{{ extra_requirements }}'
+{% for extra_requirements in CODEJAIL_EXTRA_PIP_REQUIREMENTS %}RUN --mount=type=cache,target=/openedx/.cache/pip,sharing=shared {% endif %} /sandbox/venv/bin/pip install '{{ extra_requirements }}'
 {% endfor %}
 {% endif %}
 

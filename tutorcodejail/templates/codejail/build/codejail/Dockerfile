@@ -11,10 +11,8 @@ RUN apt-get update -y && \
         git \
         apt-transport-https \
         ca-certificates \
-        language-pack-en && \
-    apt-get install -y \
-        git && \
-    update-ca-certificates && \
+        language-pack-en \
+        update-ca-certificates && \
     apt-get -y clean && \
     apt-get -y autoremove && \
     rm -rf /var/lib/apt/lists/*
@@ -180,6 +178,9 @@ USER root
 {% endfor %}
 {% endif %}
 
+#requirement which was missing from the codejail which resulted in an unknown module error
+RUN --mount=type=cache,target=/openedx/.cache/pip,sharing=shared /sandbox/venv/bin/pip install random2
+
 COPY --from=code /openedx/codejailservice /openedx/codejailservice
 COPY --from=codejailservice-python-requirements /openedx/venv /openedx/venv
 
@@ -196,7 +197,6 @@ RUN rm /home/sandbox/.bash_profile
 ENV PATH /openedx/venv/bin:${PATH}
 ENV VIRTUAL_ENV /openedx/venv/
 WORKDIR /openedx/codejailservice
-
 
 EXPOSE 8550
 CMD uwsgi \

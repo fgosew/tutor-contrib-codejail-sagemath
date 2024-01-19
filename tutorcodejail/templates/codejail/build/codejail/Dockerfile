@@ -92,7 +92,6 @@ FROM minimal as code
 
 RUN git clone https://github.com/eduNEXT/codejailservice.git --branch {{ CODEJAIL_VERSION }} --depth 1 /openedx/codejailservice
 WORKDIR /openedx/codejailservice
-#RUN git checkout ${CODEJAIL_VERSION}
 
 ###### Install python requirements in virtualenv
 FROM python as codejailservice-python-requirements
@@ -102,6 +101,10 @@ ENV VIRTUAL_ENV /openedx/venv/
 
 COPY --from=code /openedx/codejailservice /openedx/codejailservice
 WORKDIR /openedx/codejailservice
+
+#this is needed to change certain default limit settings. There might be a better version to do this but for now simply copying the file should suffice
+COPY config.py /openedx/codejailservice
+
 RUN pip3 install -r requirements/base.txt
 RUN pip3 install uwsgi==2.0.21
 

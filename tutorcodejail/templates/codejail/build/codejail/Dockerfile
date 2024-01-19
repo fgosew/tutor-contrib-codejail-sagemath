@@ -42,8 +42,6 @@ RUN apt-get update -y && \
         liblzma-dev \
         python3-openssl \
         git && \
-    apt-get install -y \
-        git && \
     apt-get -y clean && \
     apt-get -y autoremove && \
     rm -rf /var/lib/apt/lists/*

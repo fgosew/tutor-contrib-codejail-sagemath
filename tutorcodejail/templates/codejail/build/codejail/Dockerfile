@@ -11,7 +11,7 @@ RUN apt-get update -y && \
         git \
         apt-transport-https \
         ca-certificates \
-        language-pack-en \
+        language-pack-en && \
         update-ca-certificates && \
     apt-get -y clean && \
     apt-get -y autoremove && \

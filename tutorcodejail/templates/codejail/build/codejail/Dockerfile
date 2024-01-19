@@ -103,7 +103,7 @@ COPY --from=code /openedx/codejailservice /openedx/codejailservice
 WORKDIR /openedx/codejailservice
 
 #this is needed to change certain default limit settings. There might be a better version to do this but for now simply copying the file should suffice
-COPY config.py /openedx/codejailservice
+RUN sed -i 's/\"REALTIME\"\:\ 0\,/\"REALTIME\"\:\ 20\,/' /openedx/codejailservice/codejailservice/config.py
 
 RUN pip3 install -r requirements/base.txt
 RUN pip3 install uwsgi==2.0.21

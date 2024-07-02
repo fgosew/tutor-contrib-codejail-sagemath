@@ -33,7 +33,7 @@ You can install a specific version by adding the tag, branch, or commit:
 
 .. code-block:: bash
 
-    pip install git+https://github.com/edunext/tutor-contrib-codejail@v18.0.0
+    pip install git+https://github.com/fgosew/tutor-contrib-codejail@v18.0.0
 
 Usage
 -----

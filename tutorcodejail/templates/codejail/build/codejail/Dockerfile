@@ -50,6 +50,17 @@ ENV HOME /root
 WORKDIR /root
 ENV PYENV_ROOT /opt/pyenv
 
+#<<<<<<< production
+#RUN git clone https://github.com/pyenv/pyenv $PYENV_ROOT --branch v2.4.0 --depth 1
+
+#ARG CODEJAILSERVICE_PYTHON_VERSION=3.11.9
+#RUN $PYENV_ROOT/bin/pyenv install $CODEJAILSERVICE_PYTHON_VERSION
+
+#ARG SANDBOX_PYTHON_VERSION={{ CODEJAIL_SANDBOX_PYTHON_VERSION }}
+#RUN git clone https://github.com/esinker/pyenv-version-alias $PYENV_ROOT/plugins/pyenv-alias
+#RUN VERSION_ALIAS={{ CODEJAIL_SANDBOX_PYTHON_VERSION }}_sandbox $PYENV_ROOT/bin/pyenv install -f $SANDBOX_PYTHON_VERSION
+#=======
+
 #needed or the https request / tls in general will fail
 RUN update-ca-certificates
 
@@ -80,6 +91,7 @@ ARG CODEJAILSERVICE_PYTHON_VERSION=3.8.6
 
 RUN . "${HOME}/.bash_profile" && \
     pyenv install "${CODEJAILSERVICE_PYTHON_VERSION}" 
+#>>>>>>> main
 
 RUN $PYENV_ROOT/versions/$CODEJAILSERVICE_PYTHON_VERSION/bin/python -m venv /openedx/venv
 #we don't install conda here yet as this would waste space due to the stages being reused later on.
@@ -89,8 +101,12 @@ RUN $PYENV_ROOT/versions/$CODEJAILSERVICE_PYTHON_VERSION/bin/python -m venv /ope
 ###### Codejail service code
 
 FROM minimal as code
+#<<<<<<< production
+#RUN git clone {{ CODEJAIL_SERVICE_REPOSITORY }} --branch {{ CODEJAIL_SERVICE_VERSION }} --depth 1 /openedx/codejailservice
+#=======
 
 RUN git clone https://github.com/eduNEXT/codejailservice.git --branch {{ CODEJAIL_VERSION }} --depth 1 /openedx/codejailservice
+#>>>>>>> main
 WORKDIR /openedx/codejailservice
 
 ###### Install python requirements in virtualenv
@@ -117,8 +133,8 @@ ENV VIRTUAL_ENV /sandbox/venv/
 WORKDIR /var/tmp
 RUN mkdir -p common/lib/
 
-COPY --from={{ DOCKER_IMAGE_OPENEDX }} /openedx/edx-platform/requirements/edx-sandbox/py38.txt py38.txt
-RUN pip3 install -r py38.txt
+COPY --from={{ DOCKER_IMAGE_OPENEDX }} /openedx/edx-platform/requirements/edx-sandbox/releases/redwood.txt redwood.txt
+RUN pip3 install -r redwood.txt
 
 ##### Prod image
 FROM minimal as production

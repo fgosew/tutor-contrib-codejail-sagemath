@@ -65,7 +65,7 @@ ENV PYENV_ROOT /opt/pyenv
 RUN update-ca-certificates
 
 # Install pyenv and pyenv-virtualenv
-ENV PYENV_RELEASE_VERSION=2.3.12
+ENV PYENV_RELEASE_VERSION=2.4.5
 RUN git clone --depth 1 https://github.com/pyenv/pyenv.git \
         --branch "v${PYENV_RELEASE_VERSION}" \
         --single-branch \

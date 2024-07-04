@@ -41,6 +41,7 @@ RUN apt-get update -y && \
         libffi-dev \
         liblzma-dev \
         python3-openssl \
+        singularity \
         git && \
     apt-get -y clean && \
     apt-get -y autoremove && \
@@ -194,9 +195,6 @@ RUN . "/home/sandbox/.bash_profile" && \
     mamba create -y --prefix=/sandbox/venv/ sage python=${SANDBOX_PYTHON_VERSION}
 
 USER root
-
-#to fix a bug where current version sage (10.3, python 3.11.9) requires singular to be installed / binary to be available
-RUN apt install -y singularity
 
 # Allows you to add extra pip requirements to your codejail sandbox.
 {% if CODEJAIL_EXTRA_PIP_REQUIREMENTS is defined %}

@@ -87,7 +87,13 @@ RUN git clone --depth 1 https://github.com/pyenv/pyenv.git \
     cp ~/.profile ~/.bash_profile && \
     sed -i 's/.profile/.bash_profile/' ~/.bash_profile
 
-ARG CODEJAILSERVICE_PYTHON_VERSION=3.8.6
+
+{% if CODEJAILSERVICE_PYTHON_VERSION is defined %}
+ENV CODEJAILSERVICE_PYTHON_VERSION={{ CODEJAILSERVICE_PYTHON_VERSION }} 
+{% else %}
+ENV CODEJAILSERVICE_PYTHON_VERSION=3.11.9
+{% endif %}
+
 
 RUN . "${HOME}/.bash_profile" && \
     pyenv install "${CODEJAILSERVICE_PYTHON_VERSION}" 

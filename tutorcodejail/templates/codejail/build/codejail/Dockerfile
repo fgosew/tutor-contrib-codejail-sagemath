@@ -1,4 +1,4 @@
-FROM docker.io/ubuntu:22.04 as minimal
+FROM docker.io/ubuntu:24.04 as minimal
 
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update -y && \
@@ -66,7 +66,7 @@ ENV PYENV_ROOT /opt/pyenv
 RUN update-ca-certificates
 
 # Install pyenv and pyenv-virtualenv
-ENV PYENV_RELEASE_VERSION=2.4.5
+ENV PYENV_RELEASE_VERSION=2.4.0
 RUN git clone --depth 1 https://github.com/pyenv/pyenv.git \
         --branch "v${PYENV_RELEASE_VERSION}" \
         --single-branch \

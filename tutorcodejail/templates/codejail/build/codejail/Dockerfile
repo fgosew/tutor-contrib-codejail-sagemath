@@ -190,7 +190,7 @@ RUN . "/home/sandbox/.bash_profile" && \
 USER root
 
 #to fix a bug where current version sage (10.3, python 3.11.9) requires singular to be installed / binary to be available
-apt install singularity
+RUN apt install -y singularity
 
 # Allows you to add extra pip requirements to your codejail sandbox.
 {% if CODEJAIL_EXTRA_PIP_REQUIREMENTS is defined %}

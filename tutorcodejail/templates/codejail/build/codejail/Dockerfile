@@ -42,6 +42,7 @@ RUN apt-get update -y && \
         liblzma-dev \
         python3-openssl \
         singularity \
+        ssh-client \
         git && \
     apt-get -y clean && \
     apt-get -y autoremove && \
